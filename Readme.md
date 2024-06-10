@@ -12,7 +12,7 @@ This is a course on how to use the AWS SDK for Go. It is based on the [official 
 
 1. Clone the repository
 2. Run `go get` to download the dependencies
-3. switch to derictory you want to work in
+3. Switch to derictory you want to work in
 4. Run `go run main.go`
 
 ## Resources                                                            
