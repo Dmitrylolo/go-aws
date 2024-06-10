@@ -32,10 +32,8 @@ func main() {
 			switch aerr.Code() {
 			case s3.ErrCodeBucketAlreadyOwnedByYou:
 				log.Fatal("Bucket is owned by you")
-				break
 			case s3.ErrCodeBucketAlreadyExists:
 				log.Fatal("Bucket already exists")
-				break
 			default:
 				log.Fatal(aerr.Error())
 			}
