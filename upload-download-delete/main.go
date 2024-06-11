@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
@@ -68,6 +69,30 @@ func downloadItem(sess *session.Session) {
 	log.Println("Download complete")
 }
 
+func deleteItem(sess *session.Session) {
+	svc := s3.New(sess)
+	input := &s3.DeleteObjectInput{
+		Bucket: aws.String("go-s3-example-bucket"),
+		Key:    aws.String("test.txt"),
+	}
+
+	result, err := svc.DeleteObject(input)
+	if err != nil {
+		if aerr, ok := err.(awserr.Error); ok {
+			switch aerr.Code() {
+			case s3.ErrCodeNoSuchKey:
+				log.Println("The specified key does not exist.")
+			default:
+				log.Fatal(err.Error())
+			}
+		} else {
+			log.Fatal(err.Error())
+		}
+	}
+
+	log.Printf("Successfully deleted object %+v\n", result)
+}
+
 func main() {
 	fmt.Println("Upload and download")
 	sess, err := session.NewSession(&aws.Config{
@@ -80,4 +105,6 @@ func main() {
 	UploadItem(sess)
 	listItems(sess)
 	downloadItem(sess)
+	deleteItem(sess)
+	listItems(sess)
 }
